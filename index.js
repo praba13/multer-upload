@@ -6,9 +6,16 @@ const app = express();
 dotenv.config();
 
 //Sigle file upload
+//const upload = multer({ dest: 'uploads/' });
+
+//app.post('/upload', upload.single('file'), (req, res) => {
+//  res.json({ status: 'Success' });
+//});
+
+//Multiple file upload
 const upload = multer({ dest: 'uploads/' });
-//middleware key name is file
-app.post('/upload', upload.single('file'), (req, res) => {
+
+app.post('/upload', upload.array('file'), (req, res) => {
   res.json({ status: 'Success' });
 });
 
