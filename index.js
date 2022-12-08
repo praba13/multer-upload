@@ -43,6 +43,7 @@ app.post('/upload', multiUpload, (req, res) => {
 
 //Custom file name
 
+/*
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads');
@@ -54,6 +55,35 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
+
+app.post('/upload', upload.array('file'), (req, res) => {
+  res.json({ status: 'Success' });
+});
+
+*/
+
+//Filter uploads File
+// ["image", "jpeg"]
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads');
+  },
+  filename: (req, file, cb) => {
+    const { originalname } = file;
+    cb(null, `${uuidv4()}-${originalname}`);
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype.split('/')[0] === 'image') {
+    cb(null, true);
+  } else {
+    cb(new Error('File is not of the correct type'), false);
+  }
+};
+
+const upload = multer({ storage, fileFilter });
 
 app.post('/upload', upload.array('file'), (req, res) => {
   res.json({ status: 'Success' });
